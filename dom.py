@@ -93,35 +93,23 @@ def odigrajPotez(vrsta,kolona):
             matrica[vrs][kol]='O'
             matrica[vrs][kol+1]='O'
             naPotezu='X'
+        krajIgre()
         stampaj()
     else:
         print("Uneli ste nevalidni potez!")
 
 #Napisati funkcije za proveru kraja igre
 def krajIgre():
-    
     if(naPotezu=='X'):
-        vrs=0
-        kol=0
-        while(kol<brojKolona):
-            while(vrs<brojVrsta-1):
-                if(matrica[vrs][kol]==' ' and matrica[vrs+1][kol]==' '):
+        for i in range(0,brojVrsta-1):
+            for j in range(0,brojKolona):
+                if(matrica[i][j]==' ' and matrica[i+1][j]==' '):
                     return False
-                else:
-                    vrs+=1
-            kol+=1
-    
     else:
-        vrs=0
-        kol=0
-        while(vrs<brojVrsta):
-            while(kol<brojKolona-1):
-                if(matrica[vrs][kol]==' ' and matrica[vrs][kol+1]==' '):
+        for i in range(0,brojVrsta):
+            for j in range(0,brojKolona-1):
+                if(matrica[i][j]==' ' and matrica[i][j+1]==' '):
                     return False
-                else:
-                    kol+=1
-            vrs+=1
-    
     return True #Kraj je igre zato sto nema slobodnih polja za igraca koj je na potezu
 
 
@@ -138,6 +126,7 @@ def koIgraPrvi():
 
 
 def start():
+    global kraj
 
     koIgraPrvi()
 
