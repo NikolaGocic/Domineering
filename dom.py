@@ -22,7 +22,7 @@ def init():
     matrica = [ [ " " for i in range(brojKolona) ] for j in range(brojVrsta) ]
 
 #Implementirati funkcije koje obezbeđuju prikaz proizvoljnog stanja problema (igre)
-def stampaj():
+def stampaj(matrica):
     top(brojKolona)
 
     for x in range(0,brojVrsta):
@@ -59,9 +59,13 @@ def bottom(brojKolona):
 def potezValjan(vrsta,kolona): 
     kol = ord(kolona)-65
     vrs = brojVrsta-vrsta
+
+    if(vrs<0 or kol<0):
+        return False
     
     if(naPotezu=='X'):
-        if(vrs+1>=brojVrsta or kol>=brojKolona):
+
+        if((vrs+1)>=brojVrsta or kol>=brojKolona):
             return False
 
         if(matrica[vrs][kol]==' ' and matrica[vrs+1][kol]==' '):
@@ -69,7 +73,7 @@ def potezValjan(vrsta,kolona):
         else:
             return False
     else:
-        if(vrs>=brojVrsta or kol+1>=brojKolona):
+        if(vrs>=brojVrsta or (kol+1)>=brojKolona):
             return False
 
         if(matrica[vrs][kol]==' ' and matrica[vrs][kol+1]==' '):
@@ -94,7 +98,7 @@ def odigrajPotez(vrsta,kolona):
             matrica[vrs][kol+1]='O'
             naPotezu='X'
         krajIgre()
-        stampaj()
+        stampaj(matrica)
     else:
         print("Uneli ste nevalidni potez!")
 
@@ -124,15 +128,37 @@ def koIgraPrvi():
     else:
         print("Racunar je prvi na potezu!")
 
+#Realizovati funkcije koje na osnovu zadatog igrača na potezu i zadatog stanje igre formiraju sva moguća stanje igre (sve moguće table)
+def svaMogucaStanja():
+    if(naPotezu=='X'):
+        for i in range(0,brojVrsta-1):
+            for j in range(0,brojKolona):
+                if(matrica[i][j]==' ' and matrica[i+1][j]==' '):
+                    matrica[i][j] = 'X'
+                    matrica[i+1][j] = 'X'
+                    stampaj(matrica)
+                    matrica[i][j] = ' '
+                    matrica[i+1][j] = ' '
+
+    else:
+        for i in range(0,brojVrsta):
+            for j in range(0,brojKolona-1):
+                if(matrica[i][j]==' ' and matrica[i][j+1]==' '):
+                    matrica[i][j] = 'O'
+                    matrica[i][j+1] = 'O'
+                    stampaj(matrica)
+                    matrica[i][j] = ' '
+                    matrica[i][j+1] = ' '
 
 def start():
     global kraj
+    global matrica
 
     koIgraPrvi()
 
     init()
 
-    stampaj()
+    stampaj(matrica)
 
     while True:
         if(krajIgre()):
@@ -146,13 +172,21 @@ def start():
 
 
         print("\nIgrac "+naPotezu+" na potezu")
-        print("Unesite vrstu (broj 1..N):")
+        print("Unesite vrstu (broj 1..N)(-1 prekid igre, -2 stampanje svih mogucih stanja):")
         vrsta = int(sys.stdin.readline())
         if vrsta == -1:
             break
-        print("Unesite kolonu (slovo A..Z):")
-        kolona = sys.stdin.readline()
-        odigrajPotez(vrsta,kolona[0])
-
-
+        else:
+            if vrsta == -2:
+                svaMogucaStanja()
+                print("Unesite vrstu (broj 1..N)(-1 prekid igre, -2 stampanje svih mogucih stanja):")
+                vrsta = int(sys.stdin.readline())
+                print("Unesite kolonu (slovo A..Z):")
+                kolona = sys.stdin.readline()
+                odigrajPotez(vrsta,kolona[0])
+            else:
+                print("Unesite kolonu (slovo A..Z):")
+                kolona = sys.stdin.readline()
+                odigrajPotez(vrsta,kolona[0])
+            
 start()
